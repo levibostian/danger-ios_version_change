@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['levi.bostian@gmail.com']
   spec.description   = %q{A short description of danger-ios_version_change.}
   spec.summary       = %q{A longer description of danger-ios_version_change.}
-  spec.homepage      = 'https://github.com/Levi Bostian/danger-ios_version_change'
+  spec.homepage      = 'https://github.com/levibostian/danger-ios_version_change'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.4'
 
   # Linting code and docs
-  spec.add_development_dependency "rubocop", "~> 0.41"
+  spec.add_development_dependency "rubocop", "~> 0.49"
   spec.add_development_dependency "yard", "~> 0.8"
 
   # Makes testing easy via `bundle exec guard`
