@@ -1,0 +1,9 @@
+diff --git a/Foo/Info.plist b/Foo/Info.plist
+index de56abf..994a384 100644
+--- a/Foo/Info.plist
++++ b/Foo/Info.plist
+@@ -15,18 +15,18 @@
+     <key>CFBundlePackageType</key>
+     <string>APPL</string>
+     <key>CFBundleShortVersionString</key>
+-    <string>0.1.0</string>

@@ -18,24 +18,33 @@ module Danger
       # Some examples for writing tests
       # You should replace these with your own.
 
-      it "Warns on a monday" do
-        monday_date = Date.parse("2016-07-11")
-        allow(Date).to receive(:today).and_return monday_date
-
-        @my_plugin.warn_on_mondays
-
-        expect(@dangerfile.status_report[:warnings]).to eq(["Trying to merge code on a Monday"])
+      it "Cannot find Info.plist file" do
+        @my_plugin.assert_version_changed("Foo/Bar/Info.plist")
+        expect(@dangerfile.status_report[:errors]).to eq(["Info.plist at path Foo/Bar/Info.plist does not exist."])
       end
 
-      it "Does nothing on a tuesday" do
-        monday_date = Date.parse("2016-07-12")
-        allow(Date).to receive(:today).and_return monday_date
-
-        @my_plugin.warn_on_mondays
-
-        expect(@dangerfile.status_report[:warnings]).to eq([])
+      it "Fails from an empty git diff message" do
+        @my_plugin.assert_version_changed_diff("")
+        expect(@dangerfile.status_report[:errors]).to eq(["You did not change the iOS version."])
       end
 
+      it "Successfully detects version changed" do
+        diff = File.read("spec/ChangedVersionCodeGitDiff.txt")
+        @my_plugin.assert_version_changed_diff(diff)
+        expect(@dangerfile.status_report[:errors]).to eq([])
+      end
+
+      it "Runs into end of git diff. This should never happen, but I need to test the built in error handling." do
+        diff = File.read("spec/RunIntoEndOfFileGitDiff.txt")
+        @my_plugin.assert_version_changed_diff(diff)
+        expect(@dangerfile.status_report[:errors]).to eq(["You did not change the iOS version."])
+      end
+
+      it "Version code was not changed." do
+        diff = File.read("spec/NotChangedVersionCodeGitDiff.txt")
+        @my_plugin.assert_version_changed_diff(diff)
+        expect(@dangerfile.status_report[:errors]).to eq(["You did not change the iOS version."])
+      end
     end
   end
 end

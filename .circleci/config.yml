@@ -1,0 +1,65 @@
+version: 2
+jobs:
+  dependencies:
+    working_directory: ~/code
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - restore_cache:
+          key: Gemfile-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle Install
+          command: bundle install --path vendor/bundle
+      - type: cache-save
+        name: Store bundle cache
+        key: Gemfile-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+  test-lint:
+    working_directory: ~/code
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - restore_cache:
+          key: Gemfile-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle Install
+          command: bundle install --path vendor/bundle
+      - run:
+          name: run tests and lint
+          command: bundle exec rake spec
+      - run:
+          name: Danger lint to make sure it can be published
+          command: bundle exec danger plugins lint
+  deploy:
+    working_directory: ~/code
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - restore_cache:
+          key: Gemfile-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle Install
+          command: bundle install --path vendor/bundle
+      - run:
+          name: Generate README.md docs
+          command: rm README.md; bundle exec danger plugins readme > README.md; cat README_etc.md >> README.md
+workflows:
+  version: 2
+  test-lint:
+    jobs:
+      - dependencies
+      - test-lint:
+          requires:
+            - dependencies
+  deploy:
+    jobs:
+      - deploy:
+          filters: # Only runs for master merges. Not tags.
+            tags:
+              ignore: /.*/
+            branches:
+              only: master
