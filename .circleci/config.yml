@@ -48,7 +48,7 @@ jobs:
           command: bundle install --path vendor/bundle
       - run:
           name: Generate README.md docs
-          command: rm README.md; bundle exec danger plugins readme > README.md; cat README_etc.md >> README.md
+          command: rm README.md; cat README_header.md > README.md; bundle exec danger plugins readme >> README.md; cat README_footer.md >> README.md
       - run: 
           name: Create rubygems credientials file
           command: mkdir ~/.gem; printf "%s\n%s " "---" ":rubygems_api_key:" > ~/.gem/credentials; printf $RUBYGEMS_KEY >> ~/.gem/credentials;chmod 0600 ~/.gem/credentials

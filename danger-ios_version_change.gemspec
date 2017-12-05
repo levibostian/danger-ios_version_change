@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = IosVersionChange::VERSION
   spec.authors       = ['Levi Bostian']
   spec.email         = ['levi.bostian@gmail.com']
-  spec.description   = %q{A short description of danger-ios_version_change.}
-  spec.summary       = %q{A longer description of danger-ios_version_change.}
+  spec.description   = "Assert iOS version string updated. Danger plugin."
+  spec.summary       = "Assert your iOS project has changed it's version number in the XCode project. Fails using Danger when the iOS version string has not been updated and does nothing if it has. Uses git diff on Info.plist file to check if version number has been updated."
   spec.homepage      = 'https://github.com/levibostian/danger-ios_version_change'
   spec.license       = 'MIT'
 
