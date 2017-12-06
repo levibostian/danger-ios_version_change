@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Generate README.md docs
           command: rm README.md; cat README_header.md > README.md; bundle exec danger plugins readme >> README.md; cat README_footer.md >> README.md
-      - run: 
+      - run:
           name: Create rubygems credientials file
           command: mkdir ~/.gem; printf "%s\n%s " "---" ":rubygems_api_key:" > ~/.gem/credentials; printf $RUBYGEMS_KEY >> ~/.gem/credentials;chmod 0600 ~/.gem/credentials
       - run: gem build danger-ios_version_change.gemspec; gem push danger-ios_version_change-*.gem
@@ -64,8 +64,8 @@ workflows:
   deploy:
     jobs:
       - deploy:
-          filters: # Only runs for master merges. Not tags.
+          filters: # Only runs for tags.
             tags:
               only: /.*/
             branches:
-              ignore: master
+              ignore: /.*/
