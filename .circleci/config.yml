@@ -35,6 +35,22 @@ jobs:
       - run:
           name: Danger lint to make sure it can be published
           command: bundle exec danger plugins lint
+  build-gem:
+    working_directory: ~/code
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - restore_cache:
+          key: Gemfile-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle Install
+          command: bundle install --path vendor/bundle
+      - run: gem build danger-ios_version_change.gemspec; mkdir output-gems; mv danger-ios_version_change*.gem output-gems/
+      - persist_to_workspace:
+          root: output-gems
+          paths:
+            - danger-ios_version_change*.gem
   deploy:
     working_directory: ~/code
     docker:
@@ -52,7 +68,9 @@ jobs:
       - run:
           name: Create rubygems credientials file
           command: mkdir ~/.gem; printf "%s\n%s " "---" ":rubygems_api_key:" > ~/.gem/credentials; printf $RUBYGEMS_KEY >> ~/.gem/credentials;chmod 0600 ~/.gem/credentials
-      - run: gem build danger-ios_version_change.gemspec; gem push danger-ios_version_change-*.gem
+      - attach_workspace:
+          at: output-gems
+      - run: gem push output-gems/danger-ios_version_change-*.gem
 workflows:
   version: 2
   test-lint:
@@ -61,6 +79,9 @@ workflows:
       - test-lint:
           requires:
             - dependencies
+      - build-gem:
+          requires:
+            - test-lint
   deploy:
     jobs:
       - deploy:
