@@ -18,6 +18,13 @@ module Danger
       "ios_version_change"
     end
 
+    def initialize(dangerfile)
+      super(dangerfile)
+      raise unless dangerfile.env.scm.class == Danger::GitRepo
+
+      @git = dangerfile.env.scm
+    end
+
     # Ignore. Pass the git diff string here to see if the version string has been updated. Use `ios_version_change.assert_version_changed("ProjectName/Info.plist")` instead as it's more convenient sending the path to the Info.plist file.
     # @return [void]
     def assert_version_changed_diff(git_diff_string)
@@ -48,8 +55,7 @@ module Danger
         return # rubocop:disable UnreachableCode
       end
 
-      git = Git.open(Dir.pwd)
-      git_diff_string = git.diff[info_plist_file_path].patch
+      git_diff_string = @git.diff[info_plist_file_path].patch
       assert_version_changed_diff(git_diff_string)
     end
   end

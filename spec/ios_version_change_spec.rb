@@ -2,10 +2,6 @@ require File.expand_path("../spec_helper", __FILE__)
 
 module Danger
   describe Danger::DangerIosVersionChange do
-    it "should be a plugin" do
-      expect(Danger::DangerIosVersionChange.new(nil)).to be_a Danger::Plugin
-    end
-
     #
     # You should test your custom attributes and methods here
     #
