@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    danger-ios_version_change (0.1.0)
+    danger-ios_version_change (0.1.4)
       danger-plugin-api (~> 1.0)
+      git
 
 GEM
   remote: https://rubygems.org/
