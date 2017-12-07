@@ -23,7 +23,7 @@ jobs:
       - checkout
       - run: ./assert_danger_running_on_pr.sh
       - run: bundle install
-      - run: '[ ! -z $DANGER_GITHUB_API_TOKEN ] && danger || echo "Skipping Danger for External Contributor"'
+      - run: '[ ! -z $DANGER_GITHUB_API_TOKEN ] && danger || echo "Skipping Danger for External Contributor" && exit 1'
   test-lint:
     working_directory: ~/code
     docker:
@@ -72,7 +72,7 @@ jobs:
       - run:
           name: Create rubygems credientials file
           command: mkdir ~/.gem; printf "%s\n%s " "---" ":rubygems_api_key:" > ~/.gem/credentials; printf $RUBYGEMS_KEY >> ~/.gem/credentials;chmod 0600 ~/.gem/credentials
-      - run: gem build danger-ios_version_change.gemspec; gem push output-gems/danger-ios_version_change*.gem
+      - run: gem build danger-ios_version_change.gemspec; gem push danger-ios_version_change*.gem
 workflows:
   version: 2
   test-lint:
