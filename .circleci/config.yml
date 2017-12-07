@@ -50,7 +50,7 @@ jobs:
       - persist_to_workspace:
           root: output-gems
           paths:
-            - danger-ios_version_change*.gem
+            - *.gem
   deploy:
     working_directory: ~/code
     docker:
@@ -70,7 +70,7 @@ jobs:
           command: mkdir ~/.gem; printf "%s\n%s " "---" ":rubygems_api_key:" > ~/.gem/credentials; printf $RUBYGEMS_KEY >> ~/.gem/credentials;chmod 0600 ~/.gem/credentials
       - attach_workspace:
           at: output-gems
-      - run: gem push output-gems/danger-ios_version_change-*.gem
+      - run: gem push output-gems/danger-ios_version_change*.gem
 workflows:
   version: 2
   test-lint:
