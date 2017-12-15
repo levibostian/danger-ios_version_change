@@ -55,6 +55,11 @@ module Danger
         return # rubocop:disable UnreachableCode
       end
 
+      unless @git.diff.include?(info_plist_file_path) # No diff found for Info.plist file.
+        fail "You did not change the iOS version."
+        return # rubocop:disable UnreachableCode
+      end
+
       git_diff_string = @git.diff[info_plist_file_path].patch
       assert_version_changed_diff(git_diff_string)
     end
