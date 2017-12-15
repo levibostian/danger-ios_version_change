@@ -1,4 +1,3 @@
-require "git"
 
 module Danger
   # Asserts the version string has been changed in your iOS XCode project.
@@ -20,9 +19,6 @@ module Danger
 
     def initialize(dangerfile)
       super(dangerfile)
-      raise unless dangerfile.env.scm.class == Danger::GitRepo
-
-      @git = dangerfile.env.scm
     end
 
     # Ignore. Pass the git diff string here to see if the version string has been updated. Use `ios_version_change.assert_version_changed("ProjectName/Info.plist")` instead as it's more convenient sending the path to the Info.plist file.
@@ -55,12 +51,12 @@ module Danger
         return # rubocop:disable UnreachableCode
       end
 
-      unless @git.diff.include?(info_plist_file_path) # No diff found for Info.plist file.
-        fail "You did not change the iOS version."
+      unless git.diff_for_file(info_plist_file_path) # No diff found for Info.plist file.
+        fail "You did not edit your Info.plist file at all. Therefore, you did not change the iOS version."
         return # rubocop:disable UnreachableCode
       end
 
-      git_diff_string = @git.diff[info_plist_file_path].patch
+      git_diff_string = git.diff_for_file(info_plist_file_path).patch
       assert_version_changed_diff(git_diff_string)
     end
   end
