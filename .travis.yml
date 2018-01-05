@@ -1,12 +1,32 @@
+# To verify this file, call `travis lint .travis.yml` with travis-cli gem installed. To install, call `bundle install` in this directory.
+# To make life easier, I made a git commit hook to run this after each commit for reference. Create a file: `.git/hooks/pre-commit` and put inside (without the '#' before the line):
+# echo "----linting .travis.yml----"
+# travis lint .travis.yml
+# exit 0
+
+sudo: false
 language: ruby
+rvm:
+  - "2.4"
+install:
+  - bundle install --path vendor/bundle
 cache:
   directories:
-    - bundle
-
-rvm:
-  - 2.0
-  - 2.1.3
-  - 2.3.1
-
-script:
-    - bundle exec rake spec
+    - vendor/bundle
+jobs:
+  include:
+    - stage: danger
+      script: bundle exec danger --fail-on-errors=true
+    - stage: lint-tests
+      script: bundle exec rake spec
+      script: bundle exec danger plugins lint
+      script: gem build danger-ios_version_change.gemspec
+    - stage: prod-release
+      script: ./bin/gem-release.sh
+stages:
+  - name: danger
+    if: type IN (pull_request)
+  - name: lint-tests
+    if: branch = development AND type IN (pull_request)
+  - name: prod-release
+    if: branch = production AND type IN (pull_request)
