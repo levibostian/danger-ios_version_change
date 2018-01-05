@@ -5,3 +5,6 @@ gemspec
 
 # Added at 2017-12-04 17:20:03 -0600 by levibostian:
 gem "rspec_junit_formatter", "~> 0.3.0"
+
+# Added at 2018-01-05 06:00:28 -0600 by levibostian:
+gem "danger", "~> 5.5"

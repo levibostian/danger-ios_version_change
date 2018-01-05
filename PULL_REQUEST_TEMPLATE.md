@@ -1,3 +1,1 @@
-- [ ] Update `lib/ios_version_change/gem_version.rb` to latest version. Bump it! 
-- [ ] Tests all pass. 
-- [ ] After merge, make a git tag release. 
+# Please, describe what you did in this PR.
